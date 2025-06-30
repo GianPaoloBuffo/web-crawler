@@ -25,6 +25,7 @@ dependencies {
     implementation("io.ktor:ktor-client-core:2.3.12")
     implementation("io.ktor:ktor-client-cio:2.3.12")
     implementation("io.ktor:ktor-client-logging:2.3.12")
+    implementation("io.ktor:ktor-client-encoding:2.3.12")
     
     // HTML parsing
     implementation("org.jsoup:jsoup:1.17.2")
