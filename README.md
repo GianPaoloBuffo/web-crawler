@@ -203,7 +203,9 @@ Success rate: 100%
 
 ### Running Tests
 
-**Note**: There are some Gradle compatibility issues with the current test setup. The comprehensive unit and integration tests are provided in the test source directory but may not run correctly due to environment configuration issues.
+```bash
+./gradlew clean test
+```
 
 ### Available Tests
 
