@@ -143,12 +143,12 @@ Examples:
 
 **Basic crawling:**
 ```bash
-./gradlew run --args="https://monzo.com"
+./gradlew run --args="https://example.com"
 ```
 
 **With custom settings:**
 ```bash
-./gradlew run --args="https://monzo.com --max-concurrency 5 --delay 200 --timeout 60000"
+./gradlew run --args="https://example.com --max-concurrency 5 --delay 200 --timeout 60000"
 ```
 
 ## Configuration
@@ -165,10 +165,10 @@ The crawler can be configured through command-line arguments or by modifying the
 
 The crawler only follows links within the same domain as the starting URL:
 
-- ✅ `https://monzo.com/` → `https://monzo.com/about`
-- ✅ `https://monzo.com/` → `https://monzo.com/features/travel`
-- ❌ `https://monzo.com/` → `https://community.monzo.com/`
-- ❌ `https://monzo.com/` → `https://facebook.com/monzo`
+- ✅ `https://example.com/` → `https://example.com/about`
+- ✅ `https://example.com/` → `https://example.com/features/travel`
+- ❌ `https://example.com/` → `https://community.example.com/`
+- ❌ `https://example.com/` → `https://facebook.com/example`
 
 ## Output
 

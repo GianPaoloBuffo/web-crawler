@@ -101,10 +101,10 @@ Success rate: 100%
 ### 🚀 **Usage**
 ```bash
 # Basic usage
-./gradlew run --args="https://monzo.com"
+./gradlew run --args="https://example.com"
 
 # With custom settings
-./gradlew run --args="https://monzo.com --max-concurrency 5 --delay 200"
+./gradlew run --args="https://example.com --max-concurrency 5 --delay 200"
 
 # Show help
 ./gradlew run --args="--help"
