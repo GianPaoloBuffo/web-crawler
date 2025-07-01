@@ -6,9 +6,6 @@ import mu.KotlinLogging
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 
-/**
- * Infrastructure adapter that implements HtmlParser using JSoup.
- */
 class JSoupHtmlParser : HtmlParser {
     
     private val logger = KotlinLogging.logger {}
@@ -45,3 +42,20 @@ class JSoupHtmlParser : HtmlParser {
         }
     }
 }
+
+/**
+ * JSoup's behavior:
+ * val doc = Jsoup.parse(html, "https://example.com")
+ *
+ * For <a href="">
+ * element.attr("href")      Returns: ""
+ * element.attr("abs:href")  Returns: "https://example.com" (incorrect)
+ *
+ * For <a href="   ">
+ * element.attr("href")      Returns: "   "
+ * element.attr("abs:href")  Returns: "https://example.com" (incorrect)
+ *
+ * For <a href="/path">
+ * element.attr("href")      Returns: "/path"
+ * element.attr("abs:href")  Returns: "https://example.com/path" (correct!)
+ */

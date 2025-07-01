@@ -5,9 +5,6 @@ import com.webcrawler.domain.CrawlStatus
 import com.webcrawler.domain.ports.CrawlResultReporter
 import mu.KotlinLogging
 
-/**
- * Infrastructure adapter that implements CrawlResultReporter by printing to console.
- */
 class ConsoleCrawlResultReporter : CrawlResultReporter {
     
     private val logger = KotlinLogging.logger {}
@@ -29,11 +26,6 @@ class ConsoleCrawlResultReporter : CrawlResultReporter {
             CrawlStatus.FAILED -> {
                 println("✗ Failed to crawl: ${result.url.normalizedUrl}")
                 result.errorMessage?.let { println("  Error: $it") }
-                println()
-            }
-            CrawlStatus.SKIPPED -> {
-                println("⊝ Skipped: ${result.url.normalizedUrl}")
-                result.errorMessage?.let { println("  Reason: $it") }
                 println()
             }
         }

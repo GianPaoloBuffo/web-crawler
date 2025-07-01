@@ -2,10 +2,6 @@ package com.webcrawler.domain.ports
 
 import com.webcrawler.domain.CrawlResult
 
-/**
- * Port for outputting crawl results.
- * This is an outbound port that will be implemented by infrastructure adapters.
- */
 interface CrawlResultReporter {
     /**
      * Reports the result of crawling a single page.

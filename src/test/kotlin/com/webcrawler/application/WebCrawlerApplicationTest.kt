@@ -31,7 +31,8 @@ class WebCrawlerApplicationTest {
         
         application.shutdown()
     }
-    
+
+    // todo: gp - this test should be updated
     @Test
     fun `should handle valid URL`() = runTest {
         val application = WebCrawlerApplication()

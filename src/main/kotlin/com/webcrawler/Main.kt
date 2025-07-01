@@ -6,9 +6,9 @@ import kotlinx.coroutines.runBlocking
 import mu.KotlinLogging
 import kotlin.system.exitProcess
 
-/**
- * Main entry point for the Web Crawler application.
- */
+// Things to talk about:
+// - CLI application with arguments
+
 object Main {
     private val logger = KotlinLogging.logger {}
     
@@ -19,17 +19,13 @@ object Main {
             exitProcess(1)
         }
         
-        // Check for help flag first
         if (args.contains("--help")) {
             printUsage()
             exitProcess(0)
         }
         
         val startingUrl = args[0]
-        
-        // Parse additional configuration from command line arguments
         val config = parseConfig(args)
-        
         val application = WebCrawlerApplication(config)
         
         try {
@@ -98,7 +94,7 @@ object Main {
     
     private fun printUsage() {
         println("""
-            Web Crawler v1.0
+            Web Crawler 🕷️🕸️
             
             Usage: web-crawler <starting-url> [options]
             
@@ -119,3 +115,5 @@ object Main {
         """.trimIndent())
     }
 }
+
+// todo: gp - what is user-agent?

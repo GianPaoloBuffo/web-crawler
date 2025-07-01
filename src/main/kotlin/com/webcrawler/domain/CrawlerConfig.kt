@@ -1,8 +1,5 @@
 package com.webcrawler.domain
 
-/**
- * Configuration for the web crawler.
- */
 data class CrawlerConfig(
     val maxConcurrency: Int = 10,
     val requestDelayMillis: Long = 100,

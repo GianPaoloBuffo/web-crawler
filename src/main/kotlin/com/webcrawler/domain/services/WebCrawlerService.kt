@@ -11,10 +11,9 @@ import mu.KotlinLogging
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicInteger
 
-/**
- * Domain service that implements the web crawler business logic.
- * This is the core of our hexagonal architecture.
- */
+// Things to talk about:
+// Concurrent hashmap, channel
+
 class WebCrawlerService(
     private val webPageFetcher: WebPageFetcher,
     private val htmlParser: HtmlParser,
@@ -22,33 +21,33 @@ class WebCrawlerService(
     private val config: CrawlerConfig = CrawlerConfig()
 ) {
     private val logger = KotlinLogging.logger {}
-    
+
     /**
      * Crawls a website starting from the given URL, staying within the same domain.
-     * 
+     *
      * @param startingUrl The URL to start crawling from
      * @return Summary of the crawl operation
      */
     @OptIn(ExperimentalCoroutinesApi::class)
     suspend fun crawlWebsite(startingUrl: CrawlUrl): CrawlSummary {
         logger.info { "Starting crawl from: ${startingUrl.normalizedUrl}" }
-        
+
         val targetDomain = startingUrl.domain
         val visitedUrls = ConcurrentHashMap<String, Boolean>()
         val urlQueue = Channel<CrawlUrl>(Channel.UNLIMITED)
         val semaphore = Semaphore(config.maxConcurrency)
-        
+
         val successfulPages = AtomicInteger(0)
         val failedPages = AtomicInteger(0)
         val totalPages = AtomicInteger(0)
-        
+
         // Add starting URL to queue
         urlQueue.trySend(startingUrl)
         visitedUrls[startingUrl.normalizedUrl] = true
-        
+
         return coroutineScope {
             val crawlerJobs = mutableListOf<Job>()
-            
+
             // Launch crawler workers
             repeat(config.maxConcurrency) { workerId ->
                 val job = launch {
@@ -65,7 +64,7 @@ class WebCrawlerService(
                 }
                 crawlerJobs.add(job)
             }
-            
+
             // Wait for all workers to complete (when queue is empty and no workers are active)
             while (crawlerJobs.any { it.isActive }) {
                 delay(100)
@@ -74,27 +73,27 @@ class WebCrawlerService(
                     break
                 }
             }
-            
+
             // Cancel any remaining jobs
             crawlerJobs.forEach { it.cancel() }
-            
+
             val summary = CrawlSummary(
                 totalPages = totalPages.get(),
                 successfulPages = successfulPages.get(),
                 failedPages = failedPages.get()
             )
-            
+
             resultReporter.reportCompletion(
                 totalPages = summary.totalPages,
                 successfulPages = summary.successfulPages,
                 failedPages = summary.failedPages
             )
-            
+
             logger.info { "Crawl completed: $summary" }
             summary
         }
     }
-    
+
     @OptIn(DelicateCoroutinesApi::class)
     private suspend fun crawlWorker(
         workerId: Int,
@@ -107,15 +106,15 @@ class WebCrawlerService(
         totalPages: AtomicInteger
     ) {
         logger.debug { "Worker $workerId started" }
-        
+
         while (!urlQueue.isClosedForReceive) {
             val url = urlQueue.tryReceive().getOrNull() ?: break
-            
+
             semaphore.acquire()
             try {
                 val result = crawlSinglePage(url, targetDomain)
                 resultReporter.reportResult(result)
-                
+
                 when (result.status) {
                     CrawlStatus.SUCCESS -> {
                         successfulPages.incrementAndGet()
@@ -127,11 +126,10 @@ class WebCrawlerService(
                         }
                     }
                     CrawlStatus.FAILED -> failedPages.incrementAndGet()
-                    CrawlStatus.SKIPPED -> { /* Don't count skipped pages */ }
                 }
-                
+
                 totalPages.incrementAndGet()
-                
+
                 // Respect rate limiting
                 if (config.requestDelayMillis > 0) {
                     delay(config.requestDelayMillis)
@@ -140,20 +138,20 @@ class WebCrawlerService(
                 semaphore.release()
             }
         }
-        
+
         logger.debug { "Worker $workerId finished" }
     }
-    
+
     private suspend fun crawlSinglePage(url: CrawlUrl, targetDomain: String): CrawlResult {
         logger.debug { "Crawling: ${url.normalizedUrl}" }
-        
+
         return try {
             val html = webPageFetcher.fetchPage(url)
                 ?: return CrawlResult(url, emptyList(), CrawlStatus.FAILED, "Failed to fetch page content")
-            
+
             val extractedLinks = htmlParser.extractLinks(html, url)
             val sameDomainLinks = extractedLinks.filter { it.domain == targetDomain }
-            
+
             CrawlResult(url, sameDomainLinks, CrawlStatus.SUCCESS)
         } catch (e: Exception) {
             logger.warn(e) { "Failed to crawl ${url.normalizedUrl}" }
@@ -162,9 +160,6 @@ class WebCrawlerService(
     }
 }
 
-/**
- * Summary of a crawl operation.
- */
 data class CrawlSummary(
     val totalPages: Int,
     val successfulPages: Int,

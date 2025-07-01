@@ -2,10 +2,6 @@ package com.webcrawler.domain.ports
 
 import com.webcrawler.domain.CrawlUrl
 
-/**
- * Port for parsing HTML content to extract links.
- * This is an outbound port that will be implemented by infrastructure adapters.
- */
 interface HtmlParser {
     /**
      * Parses HTML content and extracts all links.

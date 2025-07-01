@@ -13,9 +13,11 @@ import io.ktor.client.statement.*
 import io.ktor.http.*
 import mu.KotlinLogging
 
-/**
- * Infrastructure adapter that implements WebPageFetcher using Ktor HTTP client.
- */
+// Things to talka bout
+// What is gzip and deflate?
+// Added retry with exponential backoff
+// What is user agent?
+
 class KtorWebPageFetcher(
     private val config: CrawlerConfig = CrawlerConfig()
 ) : WebPageFetcher {

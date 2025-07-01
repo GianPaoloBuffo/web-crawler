@@ -8,10 +8,6 @@ import com.webcrawler.infrastructure.adapters.JSoupHtmlParser
 import com.webcrawler.infrastructure.adapters.KtorWebPageFetcher
 import mu.KotlinLogging
 
-/**
- * Application service that orchestrates the web crawling operation.
- * This is the primary entry point for the application use case.
- */
 class WebCrawlerApplication(
     private val config: CrawlerConfig = CrawlerConfig()
 ) {

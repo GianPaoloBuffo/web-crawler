@@ -2,10 +2,6 @@ package com.webcrawler.domain.ports
 
 import com.webcrawler.domain.CrawlUrl
 
-/**
- * Port for fetching web page content.
- * This is an outbound port that will be implemented by infrastructure adapters.
- */
 interface WebPageFetcher {
     /**
      * Fetches the HTML content of a web page.
