@@ -1,6 +1,7 @@
 package com.webcrawler.application
 
 import com.webcrawler.domain.*
+import com.webcrawler.domain.ports.CrawlResultReporter
 import com.webcrawler.domain.services.CrawlSummary
 import com.webcrawler.domain.services.WebCrawlerService
 import com.webcrawler.infrastructure.adapters.ConsoleCrawlResultReporter
@@ -9,14 +10,14 @@ import com.webcrawler.infrastructure.adapters.KtorWebPageFetcher
 import mu.KotlinLogging
 
 class WebCrawlerApplication(
-    private val config: CrawlerConfig = CrawlerConfig()
+    private val config: CrawlerConfig = CrawlerConfig(),
+    private val resultReporter: CrawlResultReporter = ConsoleCrawlResultReporter()
 ) {
     private val logger = KotlinLogging.logger {}
     
     private val webPageFetcher = KtorWebPageFetcher(config)
     private val htmlParser = JSoupHtmlParser()
-    private val resultReporter = ConsoleCrawlResultReporter()
-    
+
     private val webCrawlerService = WebCrawlerService(
         webPageFetcher = webPageFetcher,
         htmlParser = htmlParser,

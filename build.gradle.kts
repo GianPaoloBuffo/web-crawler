@@ -43,6 +43,11 @@ dependencies {
     testImplementation("io.mockk:mockk:1.13.12")
     testImplementation("org.junit.jupiter:junit-jupiter:5.10.3")
     testImplementation("io.ktor:ktor-client-mock:2.3.12")
+    
+    // For creating test web servers
+    testImplementation("io.ktor:ktor-server-core:2.3.12")
+    testImplementation("io.ktor:ktor-server-netty:2.3.12")
+    testImplementation("io.ktor:ktor-server-content-negotiation:2.3.12")
 }
 
 tasks.test {

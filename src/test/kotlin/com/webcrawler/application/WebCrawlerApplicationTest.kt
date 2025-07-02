@@ -32,13 +32,10 @@ class WebCrawlerApplicationTest {
         application.shutdown()
     }
 
-    // todo: gp - this test should be updated
     @Test
     fun `should handle valid URL`() = runTest {
         val application = WebCrawlerApplication()
         
-        // This test will attempt to crawl a real URL, so it may fail in offline environments
-        // In a real project, we would mock the HTTP client or use a local test server
         try {
             val summary = application.crawl("https://httpbin.org/html")
             assertNotNull(summary)
