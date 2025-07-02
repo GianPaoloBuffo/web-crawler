@@ -94,13 +94,6 @@ object Main {
     
     private fun printUsage() {
         println("""
-            Web Crawler 🕷️🕸️
-            
-            Usage: web-crawler <starting-url> [options]
-            
-            Arguments:
-              starting-url          The URL to start crawling from
-            
             Options:
               --max-concurrency N   Maximum number of concurrent requests (default: 10)
               --delay N             Delay between requests in milliseconds (default: 100)
@@ -110,10 +103,8 @@ object Main {
               --help                Show this help message
             
             Examples:
-              web-crawler https://example.com
-              web-crawler https://example.com --max-concurrency 5 --delay 200
+              ./gradlew run --args="https://example.com"
+              ./gradlew run --args="https://example.com --max-concurrency 5 --delay 200 --timeout 60000"
         """.trimIndent())
     }
 }
-
-// todo: gp - what is user-agent?
