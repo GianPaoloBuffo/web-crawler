@@ -6,9 +6,6 @@ import kotlinx.coroutines.runBlocking
 import mu.KotlinLogging
 import kotlin.system.exitProcess
 
-// Things to talk about:
-// - CLI application with arguments
-
 object Main {
     private val logger = KotlinLogging.logger {}
     

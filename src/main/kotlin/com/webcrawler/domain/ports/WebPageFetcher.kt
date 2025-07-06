@@ -8,7 +8,6 @@ interface WebPageFetcher {
      * 
      * @param url The URL to fetch
      * @return The HTML content of the page, or null if the page could not be fetched
-     * @throws Exception if there's an error fetching the page
      */
     suspend fun fetchPage(url: CrawlUrl): String?
 }

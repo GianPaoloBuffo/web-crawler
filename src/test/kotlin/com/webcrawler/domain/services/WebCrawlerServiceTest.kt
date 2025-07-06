@@ -38,13 +38,13 @@ class WebCrawlerServiceTest {
             config = CrawlerConfig(maxConcurrency = 2, requestDelayMillis = 0)
         )
         
-        // Default mock behaviors
         coEvery { mockResultReporter.reportResult(any()) } just Runs
         coEvery { mockResultReporter.reportCompletion(any(), any(), any()) } just Runs
     }
     
     @Test
     fun `should crawl single page successfully`() = runTest {
+        // Given
         val startUrl = CrawlUrl("https://example.com")
         val html = "<html><body><a href='https://example.com/page1'>Link 1</a></body></html>"
         val extractedLinks = listOf(CrawlUrl("https://example.com/page1"))
@@ -53,9 +53,11 @@ class WebCrawlerServiceTest {
         every { mockHtmlParser.extractLinks(html, startUrl) } returns extractedLinks
         
         coEvery { mockWebPageFetcher.fetchPage(CrawlUrl("https://example.com/page1")) } returns null
-        
+
+        // WHen
         val summary = webCrawlerService.crawlWebsite(startUrl)
-        
+
+        // Then
         assertEquals(2, summary.totalPages)
         assertEquals(1, summary.successfulPages)
         assertEquals(1, summary.failedPages)
@@ -68,6 +70,7 @@ class WebCrawlerServiceTest {
     
     @Test
     fun `should filter links to same domain only`() = runTest {
+        // Given
         val startUrl = CrawlUrl("https://example.com")
         val html = """
             <html><body>
@@ -86,12 +89,12 @@ class WebCrawlerServiceTest {
         coEvery { mockWebPageFetcher.fetchPage(startUrl) } returns html
         every { mockHtmlParser.extractLinks(html, startUrl) } returns extractedLinks
         
-        // Only the same domain link should be crawled
         coEvery { mockWebPageFetcher.fetchPage(CrawlUrl("https://example.com/page1")) } returns null
-        
+
+        // When
         webCrawlerService.crawlWebsite(startUrl)
         
-        // Verify only same domain links are processed
+        // Then
         coVerify(exactly = 1) { mockWebPageFetcher.fetchPage(CrawlUrl("https://example.com/page1")) }
         coVerify(exactly = 0) { mockWebPageFetcher.fetchPage(CrawlUrl("https://other.com/page1")) }
         coVerify(exactly = 0) { mockWebPageFetcher.fetchPage(CrawlUrl("https://sub.example.com/page1")) }
@@ -99,12 +102,15 @@ class WebCrawlerServiceTest {
     
     @Test
     fun `should handle fetch failures gracefully`() = runTest {
+        // Given
         val startUrl = CrawlUrl("https://example.com")
         
         coEvery { mockWebPageFetcher.fetchPage(startUrl) } returns null
-        
+
+        // When
         val summary = webCrawlerService.crawlWebsite(startUrl)
-        
+
+        // Then
         assertEquals(1, summary.totalPages)
         assertEquals(0, summary.successfulPages)
         assertEquals(1, summary.failedPages)
@@ -114,14 +120,17 @@ class WebCrawlerServiceTest {
     
     @Test
     fun `should handle parsing exceptions gracefully`() = runTest {
+        // Given
         val startUrl = CrawlUrl("https://example.com")
         val html = "<html><body>Some content</body></html>"
         
         coEvery { mockWebPageFetcher.fetchPage(startUrl) } returns html
         every { mockHtmlParser.extractLinks(html, startUrl) } throws RuntimeException("Parse error")
-        
+
+        // When
         val summary = webCrawlerService.crawlWebsite(startUrl)
-        
+
+        // Then
         assertEquals(1, summary.totalPages)
         assertEquals(0, summary.successfulPages)
         assertEquals(1, summary.failedPages)
@@ -131,6 +140,7 @@ class WebCrawlerServiceTest {
     
     @Test
     fun `should not crawl duplicate URLs`() = runTest {
+        // Given
         val startUrl = CrawlUrl("https://example.com")
         val html = """
             <html><body>
@@ -148,16 +158,18 @@ class WebCrawlerServiceTest {
         every { mockHtmlParser.extractLinks(html, startUrl) } returns extractedLinks
         
         coEvery { mockWebPageFetcher.fetchPage(CrawlUrl("https://example.com/page1")) } returns null
-        
+
+        // When
         val summary = webCrawlerService.crawlWebsite(startUrl)
         
-        // Should only fetch the duplicate URL once
+        // Then
         coVerify(exactly = 1) { mockWebPageFetcher.fetchPage(CrawlUrl("https://example.com/page1")) }
         assertEquals(2, summary.totalPages) // start page + unique page1
     }
     
     @Test
     fun `should report all results correctly`() = runTest {
+        // Given
         val startUrl = CrawlUrl("https://example.com")
         val html = "<html><body><a href='https://example.com/page1'>Link</a></body></html>"
         
@@ -165,9 +177,11 @@ class WebCrawlerServiceTest {
         every { mockHtmlParser.extractLinks(html, startUrl) } returns listOf(CrawlUrl("https://example.com/page1"))
         
         coEvery { mockWebPageFetcher.fetchPage(CrawlUrl("https://example.com/page1")) } returns null
-        
+
+        // When
         webCrawlerService.crawlWebsite(startUrl)
-        
+
+        // Then
         coVerify(exactly = 2) { mockResultReporter.reportResult(any()) }
         coVerify { mockResultReporter.reportCompletion(any(), any(), any()) }
     }

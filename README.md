@@ -154,21 +154,6 @@ Success rate: 100%
 ./gradlew clean test
 ```
 
-### Available Tests
-
-The project includes comprehensive testing code:
-
-[//]: # todo: gp - check tests again
-- **Unit Tests**: Test individual components in isolation
-- **Integration Tests**: Test component interactions  
-- **Domain Tests**: Test business logic and value objects
-- **Infrastructure Tests**: Test external adapters
-
-Test files are located in:
-- `src/test/kotlin/com/webcrawler/domain/` - Domain model tests
-- `src/test/kotlin/com/webcrawler/infrastructure/` - Infrastructure adapter tests
-- `src/test/kotlin/com/webcrawler/application/` - Application service tests
-
 ## Error Handling
 
 The crawler handles various error scenarios gracefully:

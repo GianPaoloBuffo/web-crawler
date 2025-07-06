@@ -21,6 +21,7 @@ class KtorWebPageFetcherTest {
 
     @Test
     fun `should fetch HTML content successfully`() = runTest {
+        // Given
         val mockEngine = MockEngine { request ->
             when (request.url.toString()) {
                 "https://example.com/" -> respond(
@@ -56,8 +57,11 @@ class KtorWebPageFetcherTest {
         }
 
         val url = CrawlUrl("https://example.com/")
+
+        // When
         val content = fetcher.fetchPage(url)
 
+        // Then
         assertEquals("<html><body><h1>Test Page</h1></body></html>", content)
 
         httpClient.close()
@@ -65,6 +69,7 @@ class KtorWebPageFetcherTest {
 
     @Test
     fun `should return null for 404 responses`() = runTest {
+        // Given
         val mockEngine = MockEngine { request ->
             respond(
                 content = "Not Found",
@@ -88,8 +93,11 @@ class KtorWebPageFetcherTest {
         }
 
         val url = CrawlUrl("https://example.com/not-found")
+
+        // When
         val content = fetcher.fetchPage(url)
 
+        // Then
         assertNull(content)
 
         httpClient.close()
@@ -97,8 +105,8 @@ class KtorWebPageFetcherTest {
 
     @Test
     fun `should handle timeout gracefully`() = runTest {
+        // Given
         val mockEngine = MockEngine { request ->
-            // Simulate a delay longer than the timeout
             delay(100) // 100ms delay
             respond(
                 content = "",
@@ -127,9 +135,11 @@ class KtorWebPageFetcherTest {
         }
 
         val url = CrawlUrl("https://example.com/slow")
+
+        // When
         val content = fetcher.fetchPage(url)
 
-        // Should handle timeout gracefully and return null
+        // Then
         assertNull(content)
 
         httpClient.close()

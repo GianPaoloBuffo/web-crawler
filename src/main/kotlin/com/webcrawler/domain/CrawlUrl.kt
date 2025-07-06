@@ -1,8 +1,5 @@
 package com.webcrawler.domain
 
-// Things to talk about:
-// url normalisation
-
 data class CrawlUrl(val value: String) {
     
     init {

@@ -13,11 +13,6 @@ import io.ktor.client.statement.*
 import io.ktor.http.*
 import mu.KotlinLogging
 
-// Things to talka bout
-// What is gzip and deflate?
-// Added retry with exponential backoff
-// What is user agent?
-
 class KtorWebPageFetcher(
     private val config: CrawlerConfig = CrawlerConfig()
 ) : WebPageFetcher {
@@ -31,7 +26,6 @@ class KtorWebPageFetcher(
             socketTimeoutMillis = config.timeoutMillis
         }
         
-        // Install content encoding support for gzip, deflate
         install(ContentEncoding) {
             gzip()
             deflate()
@@ -50,10 +44,8 @@ class KtorWebPageFetcher(
             agent = config.userAgent
         }
         
-        // Handle redirects
         followRedirects = true
         
-        // Set default headers
         defaultRequest {
             header(HttpHeaders.Accept, "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
             header(HttpHeaders.AcceptLanguage, "en-US,en;q=0.5")

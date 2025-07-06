@@ -11,9 +11,6 @@ import mu.KotlinLogging
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicInteger
 
-// Things to talk about:
-// Concurrent hashmap, channel
-
 class WebCrawlerService(
     private val webPageFetcher: WebPageFetcher,
     private val htmlParser: HtmlParser,
